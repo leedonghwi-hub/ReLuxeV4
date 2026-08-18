@@ -1,28 +1,28 @@
 // ============================================================================
-// Re:Luxe 중고명품 통합검색 플랫폼 - 공통 TypeScript 타입 정의
+// Reverdi 중고명품 통합검색 플랫폼 - 핵심 TypeScript 타입 정의
 // ============================================================================
 
 /**
  * 카테고리 고유 식별자 타입
- * - 'bag': 가방 카테고리 (활성화)
- * - 'watch': 시계 카테고리 (활성화)
- * - 'jewelry' | 'apparel' | 'shoes': 오픈 예정 카테고리
+ * - 'bag': 가방 카테고리
+ * - 'watch': 시계 카테고리
+ * - 'jewelry' | 'apparel' | 'shoes': 주얼리, 의류, 신발 카테고리
  */
 export type CategoryId = 'bag' | 'watch' | 'jewelry' | 'apparel' | 'shoes';
 
 /**
- * 메인 5대 카테고리 및 네비게이션 드롭다운 메뉴용 카테고리 메타데이터
+ * 메인 5대 카테고리 및 상단 네비게이션 드롭다운 메뉴용 카테고리 메타데이터 인터페이스
  */
 export interface CategoryItem {
   /** 카테고리 고유 식별자 (예: 'bag', 'watch', 'jewelry') */
   id: string;
-  /** 한글 카테고리명 (예: '가방', '시계', '주얼리') */
+  /** 한글 카테고리명 (예: '가방', '시계', '주얼리', '의류', '신발') */
   title: string;
   /** 영문 서브타이틀 (예: 'Bags & Handbags', 'Luxury Watches') */
   subtitle: string;
   /** UI 디자인용 스케치 라벨 */
   sketchLabel: string;
-  /** 서비스 준비중 여부 (true인 경우 클릭 시 오픈 사전 알림 모달 호출) */
+  /** 서비스 준비중 여부 */
   isPreparing: boolean;
   /** 카테고리 내 등록된 매물 수 */
   itemCount?: number;
@@ -30,7 +30,7 @@ export interface CategoryItem {
   iconType: 'bag' | 'watch' | 'jewelry' | 'apparel' | 'shoes' | 'accessory';
   /** 카테고리 소개 및 설명 문구 */
   description?: string;
-  /** 오픈 예정일 안내 문구 (준비중 카테고리용) */
+  /** 오픈 예정일 안내 문구 */
   expectedLaunch?: string;
 }
 
@@ -88,4 +88,5 @@ export interface LuxuryProduct {
   /** 찜 / 관심 수 */
   likes?: number;
 }
+
 

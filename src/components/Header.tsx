@@ -46,9 +46,9 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
       {/* 배경 은은한 방사형 골드 글로우 이펙트 */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-96 bg-gradient-to-b from-[#FFF5E6] via-[#FAF3E5]/60 to-transparent blur-3xl -z-10 pointer-events-none rounded-full" />
 
-      {/* 브랜드 로고 (Re:Luxe) */}
+      {/* 브랜드 로고 (Reverdi) */}
       <div className="my-3 sm:my-5 flex justify-center">
-        <ReLuxeLogo size="responsive" showSubline={true} showGuideLines={false} />
+        <ReLuxeLogo size="responsive" showSubline={false} showGuideLines={false} />
       </div>
 
       {/* 한글 타이틀 & 설명 */}
@@ -56,7 +56,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
         중고명품 통합검색 사이트
       </p>
       <p className="text-base sm:text-lg md:text-xl text-[#7C6F5E] mt-3 sm:mt-4 font-sans-kr font-normal max-w-3xl mx-auto">
-        국내 주요 플랫폼의 실시간 매물과 시세를 한눈에 비교하고 운명을 찾아보세요
+        국내 주요 플랫폼의 매물을 검색하여 운명을 찾아보세요
       </p>
 
       {/* 중앙 메인 통합 검색창 */}

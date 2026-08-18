@@ -30,14 +30,14 @@ export const RecommendedProducts: React.FC<RecommendedProductsProps> = ({
           <div className="flex items-center gap-2 mb-2 sm:mb-3">
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#C5A059]/15 text-[#8C6D2D] font-bold text-xs sm:text-sm">
               <Sparkles className="w-4 h-4 text-[#C5A059]" />
-              Re:Luxe 에디터 픽
+              Reverdi 에디터 픽
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif-luxury font-bold text-[#1A1816] tracking-tight">
             추천물품
           </h2>
           <p className="text-base sm:text-lg text-[#7A6E5E] mt-2 font-sans-kr">
-            실시간 다중 플랫폼 시세 비교 및 검증을 마친 인기 명품 매물
+            Reverdi가 추천하는 명품 매물
           </p>
         </div>
 

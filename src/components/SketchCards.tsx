@@ -8,21 +8,16 @@ import { MOCK_PRODUCTS } from '../data/luxuryData';
 interface SketchCardsProps {
   /** 5대 카테고리 목록 메타데이터 */
   categories: CategoryItem[];
-  /** 카테고리 선택 시 호출되는 콜백 (가방, 시계 등 활성 카테고리) */
+  /** 카테고리 선택 시 호출되는 콜백 */
   onSelectCategory: (id: string) => void;
-  /** 오픈 예정 카테고리(주얼리, 의류, 신발) 클릭 시 알림 신청 모달 호출 콜백 */
-  onOpenNotifyModal: (category: CategoryItem) => void;
 }
 
 /**
  * 메인 홈 화면의 5대 핵심 명품 카테고리 카드 갤러리 컴포넌트
- * - 가방 / 시계: 활성 상태 (클릭 시 해당 카테고리 매물 검색 결과로 이동)
- * - 주얼리 / 의류 / 신발: 오픈 예정(preparing) 상태 (클릭 시 사전 알림 모달 호출)
  */
 export const SketchCards: React.FC<SketchCardsProps> = ({
   categories,
   onSelectCategory,
-  onOpenNotifyModal
 }) => {
   return (
     <section className="w-full max-w-[1680px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 py-12 sm:py-20 lg:py-24">
@@ -47,18 +42,8 @@ export const SketchCards: React.FC<SketchCardsProps> = ({
           return (
             <div
               key={item.id}
-              onClick={() => {
-                if (isPreparing) {
-                  onOpenNotifyModal(item);
-                } else {
-                  onSelectCategory(item.id);
-                }
-              }}
-              className={`group relative rounded-2xl sm:rounded-3xl transition-all duration-300 flex flex-col justify-between overflow-hidden ${
-                isPreparing
-                  ? 'bg-gradient-to-b from-white/90 to-[#FAF6EE]/80 border-2 border-dashed border-[#E5DACE] card-shadow cursor-pointer hover:border-[#C5A059]'
-                  : 'bg-white/90 hover:bg-white border-2 border-[#EADFCF] hover:border-[#C5A059]/70 card-shadow hover:card-shadow-hover hover:-translate-y-2 cursor-pointer'
-              }`}
+              onClick={() => onSelectCategory(item.id)}
+              className="group relative rounded-2xl sm:rounded-3xl transition-all duration-300 flex flex-col justify-between overflow-hidden bg-white/90 hover:bg-white border-2 border-[#EADFCF] hover:border-[#C5A059]/70 card-shadow hover:card-shadow-hover hover:-translate-y-2 cursor-pointer"
               style={{ minHeight: '390px' }}
             >
               {/* 일러스트 아이콘 박스 */}

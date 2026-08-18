@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { LuxuryProduct, CategoryItem } from '../types';
+import { LuxuryProduct } from '../types';
 import {
   Search,
   ArrowLeft,
@@ -18,11 +18,11 @@ import {
   Loader2,
   X,
   TrendingDown,
+  TrendingUp,
   ExternalLink,
 } from 'lucide-react';
 import { MOCK_PRODUCTS, FILTER_PLATFORMS, BRANDS_BY_CATEGORY, POPULAR_BRANDS } from '../data/luxuryData';
 import { ReLuxeLogo } from './ReLuxeLogo';
-import { NotifyModal } from './NotifyModal';
 import { MegaCategoryMenu } from './MegaCategoryMenu';
 
 /** 검색 결과 페이지 컴포넌트 Props */
@@ -92,13 +92,11 @@ export const SearchResultsPage: React.FC<SearchResultsPageProps> = ({
   const [activePlatform, setActivePlatform] = useState<string>('전체');
   // 선택된 브랜드
   const [selectedBrand, setSelectedBrand] = useState<string>('전체');
-  // 정렬 기준 (최저가, 최고가, 할인율, 최신순)
-  const [sortBy, setSortBy] = useState<'lowest_price' | 'highest_price' | 'discount' | 'latest'>('lowest_price');
+  // 정렬 기준 (최저가, 최고가, 최신순)
+  const [sortBy, setSortBy] = useState<'lowest_price' | 'highest_price' | 'latest'>('lowest_price');
   // 가격 범위 필터 (최저가 / 최고가)
   const [minPrice, setMinPrice] = useState<number>(0);
   const [maxPrice, setMaxPrice] = useState<number>(100000000);
-  // 오픈 예정 카테고리 알림 모달 상태
-  const [notifyCategory, setNotifyCategory] = useState<CategoryItem | null>(null);
 
   // query props 변경 시 인풋 동기화
   useEffect(() => {
@@ -195,11 +193,6 @@ export const SearchResultsPage: React.FC<SearchResultsPageProps> = ({
       // 정렬 처리
       if (sortBy === 'lowest_price') return a.lowestPrice - b.lowestPrice;
       if (sortBy === 'highest_price') return b.lowestPrice - a.lowestPrice;
-      if (sortBy === 'discount') {
-        const discA = a.retailPrice ? (a.retailPrice - a.lowestPrice) / a.retailPrice : 0;
-        const discB = b.retailPrice ? (b.retailPrice - b.lowestPrice) / b.retailPrice : 0;
-        return discB - discA;
-      }
       return 0; // 최신순 기본
     });
   }, [query, activeCategory, selectedBrand, activePlatform, minPrice, maxPrice, sortBy]);
@@ -267,7 +260,6 @@ export const SearchResultsPage: React.FC<SearchResultsPageProps> = ({
               onSelectCategory(catId, brand);
             }
           }}
-          onOpenNotifyModal={(cat) => setNotifyCategory(cat)}
           onGoHome={onGoHome}
         />
 
@@ -372,22 +364,31 @@ export const SearchResultsPage: React.FC<SearchResultsPageProps> = ({
                 </h1>
               </div>
 
-              {/* 실시간 시세 통계 */}
+              {/* 실시간 가격 통계 */}
               {priceStats && priceStats.count > 0 && (
                 <div className="flex items-center gap-3 sm:gap-4 bg-white/90 border border-[#E2D6C3] rounded-2xl px-5 py-3 shadow-xs">
                   <div className="text-left pr-4 border-r border-[#ECE3D5]">
                     <div className="text-xs text-[#8C7E6C] font-medium flex items-center gap-1">
                       <TrendingDown className="w-4 h-4 text-emerald-600" />
-                      최저 시세
+                      최저 가격
                     </div>
                     <div className="text-base sm:text-lg font-bold text-emerald-700">
                       {priceStats.min.toLocaleString()}원
                     </div>
                   </div>
-                  <div className="text-left pl-1">
-                    <div className="text-xs text-[#8C7E6C] font-medium">평균 시세</div>
+                  <div className="text-left pr-4 border-r border-[#ECE3D5]">
+                    <div className="text-xs text-[#8C7E6C] font-medium">평균 가격</div>
                     <div className="text-base sm:text-lg font-bold text-[#2C2825]">
                       {priceStats.avg.toLocaleString()}원
+                    </div>
+                  </div>
+                  <div className="text-left pl-1">
+                    <div className="text-xs text-[#8C7E6C] font-medium flex items-center gap-1">
+                      <TrendingUp className="w-4 h-4 text-rose-600" />
+                      최고 가격
+                    </div>
+                    <div className="text-base sm:text-lg font-bold text-[#2C2825]">
+                      {priceStats.max.toLocaleString()}원
                     </div>
                   </div>
                 </div>
@@ -418,11 +419,6 @@ export const SearchResultsPage: React.FC<SearchResultsPageProps> = ({
                 >
                   <Icon className={`w-4 h-4 ${isActive ? 'text-[#C5A059]' : 'text-[#8C7E6C]'}`} />
                   <span>{cat.name}</span>
-                  {isActive && activeCategory === 'bag' && (
-                    <span className="ml-1 px-1.5 py-0.5 rounded-md bg-[#C5A059] text-[#1A1816] text-[10px] font-bold">
-                      필터 활성
-                    </span>
-                  )}
                 </button>
               );
             })}
@@ -508,7 +504,6 @@ export const SearchResultsPage: React.FC<SearchResultsPageProps> = ({
               {[
                 { id: 'lowest_price', label: '최저가순' },
                 { id: 'highest_price', label: '최고가순' },
-                { id: 'discount', label: '할인율순' },
                 { id: 'latest', label: '최신순' },
               ].map((sortItem) => (
                 <button
@@ -789,24 +784,25 @@ export const SearchResultsPage: React.FC<SearchResultsPageProps> = ({
       </div>
 
       {/* 푸터 영역 */}
-      <footer className="w-full bg-[#2C2825] text-[#D8CFB9] py-14 sm:py-16 px-4 sm:px-8 lg:px-12 xl:px-16 mt-20 border-t border-[#C5A059]/30">
+      <footer className="w-full bg-[#2C2825] text-[#D8CFB9] py-12 sm:py-14 px-4 sm:px-8 lg:px-12 xl:px-16 mt-20 border-t border-[#C5A059]/30">
         <div className="max-w-[1680px] mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
-          <div>
-            <div className="mb-2 flex items-center justify-center md:justify-start">
-              <ReLuxeLogo size="md" variant="dark" showSubline={true} showGuideLines={false} />
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-5 sm:gap-7">
+            <ReLuxeLogo size="md" variant="dark" showSubline={false} showGuideLines={false} />
+            <div className="flex items-center gap-3.5 text-xs sm:text-sm text-white font-medium">
+              <button type="button" className="hover:text-[#EAE2D2] transition-colors cursor-pointer">
+                이용약관
+              </button>
+              <span className="text-[#8C7E6C]/60 select-none">|</span>
+              <button type="button" className="hover:text-[#EAE2D2] transition-colors cursor-pointer">
+                고객센터
+              </button>
             </div>
-            <p className="text-xs text-[#A09382]">
-              중고나라 · 번개장터 · 당근 · 구구스 · 필웨이 명품 매물 실시간 가격 비교
-            </p>
           </div>
           <div className="text-xs text-[#8C7E6C]">
-            <p>© 2026 Re:Luxe. All rights reserved.</p>
+            <p>© 2026 Reverdi. All rights reserved.</p>
           </div>
         </div>
       </footer>
-
-      {/* 사전 알림 신청 팝업 모달 */}
-      <NotifyModal category={notifyCategory} onClose={() => setNotifyCategory(null)} />
     </div>
   );
 };

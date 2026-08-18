@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { X, User, LogIn, Menu } from 'lucide-react';
 import { ReLuxeLogo } from './ReLuxeLogo';
-import { CategoryItem } from '../types';
 
-/** 상단 네비게이션 및 메가 카테고리 메뉴 Props */
+/**
+ * 상단 네비게이션 및 메가 카테고리 메뉴 인터페이스
+ */
 export interface MegaNavProps {
-  /** 카테고리/브랜드/검색어 선택 시 호출되는 콜백 */
+  /** 카테고리/브랜드/검색어 선택 시 호출되는 콜백 함수 */
   onSelectCategory: (categoryId: string, brand?: string, subQuery?: string) => void;
-  /** 준비중 카테고리 알림 신청 모달 오픈 콜백 */
-  onOpenNotifyModal: (category: CategoryItem) => void;
-  /** 홈 화면으로 이동 콜백 */
+  /** Reverdi 로고 클릭 시 홈 화면으로 이동하는 콜백 함수 */
   onGoHome: () => void;
 }
 
@@ -52,7 +51,6 @@ export const MEGA_CATEGORY_DATA = [
  */
 export const MegaCategoryMenu: React.FC<MegaNavProps> = ({
   onSelectCategory,
-  onOpenNotifyModal,
   onGoHome,
 }) => {
   // 드롭다운 열림/닫힘 상태
@@ -87,15 +85,16 @@ export const MegaCategoryMenu: React.FC<MegaNavProps> = ({
       {/* 상단 메인 네비게이션 바 */}
       <div className="max-w-[1680px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
         <div className="flex items-center justify-between h-14 sm:h-16">
-          {/* 좌측 카테고리 토글 버튼 */}
+          {/* 좌측 영역: 카테고리 토글 버튼 */}
           <div className="flex items-center gap-1 sm:gap-2">
             <button
+              id="btn-nav-category-toggle"
               type="button"
               onClick={handleCategoryButtonClick}
               onMouseEnter={() => {
                 setIsOpen(true);
               }}
-              className={`flex items-center gap-1.5 px-3 py-2 text-sm sm:text-base font-bold transition-all rounded-lg cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-bold transition-all rounded-lg cursor-pointer ${
                 isOpen
                   ? 'text-[#1A1816] font-extrabold bg-[#F5ECE0]'
                   : 'text-[#332D27] hover:text-[#1A1816] hover:bg-[#FAF6F0]'
@@ -110,8 +109,9 @@ export const MegaCategoryMenu: React.FC<MegaNavProps> = ({
             </button>
           </div>
 
-          {/* 우측 영역: 로그인, 마이페이지 및 Re:Luxe 로고 */}
+          {/* 우측 영역: 로그인, 마이페이지 바로 오른쪽에 Reverdi 로고 배치 */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            {/* 로그인 & 마이페이지 링크 */}
             <div className="flex items-center gap-1 sm:gap-1.5 text-xs font-medium text-[#4A4237]">
               <button
                 id="btn-nav-login"
@@ -132,13 +132,14 @@ export const MegaCategoryMenu: React.FC<MegaNavProps> = ({
               </button>
             </div>
 
-            <div className="hidden sm:block w-px h-5 bg-[#E8DEC9] mx-0.5" />
+            {/* 마이페이지와 로고 사이 구분선 */}
+            <div className="h-5 w-px bg-[#E8DEC9] mx-0.5" />
 
-            {/* 브랜드 홈 이동 로고 */}
+            {/* 마이페이지 바로 오른쪽: Reverdi 브랜드 홈 이동 로고 */}
             <div
               id="header-nav-logo"
               onClick={onGoHome}
-              className="cursor-pointer hover:opacity-85 transition-opacity py-1 pl-1"
+              className="cursor-pointer hover:opacity-85 transition-opacity flex items-center pl-0.5"
               title="홈으로 가기"
             >
               <ReLuxeLogo size="sm" showSubline={false} showGuideLines={false} />
@@ -169,29 +170,13 @@ export const MegaCategoryMenu: React.FC<MegaNavProps> = ({
                       idx !== MEGA_CATEGORY_DATA.length - 1 ? 'lg:border-r border-[#F0E8DC] lg:pr-6' : ''
                     }`}
                   >
-                    {/* 카테고리 인터랙티브 통합 카드 (상하 넉넉한 높이 확보 및 호버 시 잘림 방지) */}
+                    {/* 카테고리 인터랙티브 통합 카드 */}
                     <div
                       onClick={() => {
-                        if (!cat.isPreparing) {
-                          if (!isPinned) setIsOpen(false);
-                          onSelectCategory(cat.id);
-                        } else {
-                          onOpenNotifyModal({
-                            id: cat.id,
-                            title: cat.title,
-                            subtitle: 'ReLuxe Category',
-                            sketchLabel: 'preparing',
-                            isPreparing: true,
-                            iconType: cat.iconType || 'bag',
-                            description: `${cat.title} 서비스는 곧 오픈될 예정입니다.`,
-                          });
-                        }
+                        if (!isPinned) setIsOpen(false);
+                        onSelectCategory(cat.id);
                       }}
-                      className={`group/icon rounded-2xl flex flex-col items-center justify-between p-5 transition-all duration-200 cursor-pointer min-h-[165px] sm:min-h-[185px] ${
-                        cat.isPreparing
-                          ? 'bg-[#F9F5EE]/70 text-[#B8A895] border border-dashed border-[#E5DACE] hover:border-[#C5A059]'
-                          : 'bg-gradient-to-br from-[#FFFDF9] via-[#FAF4EA] to-[#F3E8D8] text-[#332D27] hover:from-[#FFF7EA] hover:to-[#EFE2CE] border border-[#E8DFC8] hover:border-[#C5A059] shadow-2xs hover:shadow-lg'
-                      }`}
+                      className="group/icon rounded-2xl flex flex-col items-center justify-between p-5 transition-all duration-200 cursor-pointer min-h-[165px] sm:min-h-[185px] bg-gradient-to-br from-[#FFFDF9] via-[#FAF4EA] to-[#F3E8D8] text-[#332D27] hover:from-[#FFF7EA] hover:to-[#EFE2CE] border border-[#E8DFC8] hover:border-[#C5A059] shadow-2xs hover:shadow-lg"
                     >
                       {/* 일러스트 아이콘 */}
                       <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center transition-transform duration-200 group-hover/icon:scale-105 my-auto">

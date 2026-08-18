@@ -5,9 +5,8 @@ import { ReLuxeLogo } from './components/ReLuxeLogo';
 import { SketchCards } from './components/SketchCards';
 import { SearchResultsPage } from './components/SearchResultsPage';
 import { RecommendedProducts } from './components/RecommendedProducts';
-import { NotifyModal } from './components/NotifyModal';
 import { SKETCH_CATEGORIES } from './data/luxuryData';
-import { CategoryItem, LuxuryProduct } from './types';
+import { LuxuryProduct } from './types';
 
 /**
  * Re:Luxe 명품 최저가 검색 플랫폼 루트 컴포넌트
@@ -22,8 +21,6 @@ export default function App() {
   const [selectedBrand, setSelectedBrand] = useState<string>('전체');
   // 검색어 상태
   const [searchQuery, setSearchQuery] = useState<string>('');
-  // 오픈 예정 카테고리 알림 신청 모달 대상 객체
-  const [notifyCategory, setNotifyCategory] = useState<CategoryItem | null>(null);
 
   /**
    * 홈 화면으로 초기화 및 이동 핸들러
@@ -92,7 +89,6 @@ export default function App() {
               handleOpenSearchPage('', catId);
             }
           }}
-          onOpenNotifyModal={(cat) => setNotifyCategory(cat)}
           onGoHome={handleGoHome}
         />
 
@@ -107,7 +103,6 @@ export default function App() {
         <SketchCards
           categories={SKETCH_CATEGORIES}
           onSelectCategory={(catId) => handleOpenSearchPage('', catId)}
-          onOpenNotifyModal={(cat) => setNotifyCategory(cat)}
         />
 
         {/* 에디터스 픽 추천 명품 10종 그리드 (1줄 5개씩 2줄 배치) */}
@@ -118,27 +113,25 @@ export default function App() {
       </div>
 
       {/* 푸터 영역 */}
-      <footer className="w-full bg-[#2C2825] text-[#D8CFB9] py-14 sm:py-16 px-4 sm:px-8 lg:px-12 xl:px-16 mt-20 sm:mt-28 border-t border-[#C5A059]/30">
+      <footer className="w-full bg-[#2C2825] text-[#D8CFB9] py-12 sm:py-14 px-4 sm:px-8 lg:px-12 xl:px-16 mt-20 sm:mt-28 border-t border-[#C5A059]/30">
         <div className="max-w-[1680px] mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
-          <div>
-            <div className="mb-2 flex items-center justify-center md:justify-start">
-              <ReLuxeLogo size="md" variant="dark" showSubline={true} showGuideLines={false} />
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-5 sm:gap-7">
+            <ReLuxeLogo size="md" variant="dark" showSubline={false} showGuideLines={false} />
+            <div className="flex items-center gap-3.5 text-xs sm:text-sm text-white font-medium">
+              <button type="button" className="hover:text-[#EAE2D2] transition-colors cursor-pointer">
+                이용약관
+              </button>
+              <span className="text-[#8C7E6C]/60 select-none">|</span>
+              <button type="button" className="hover:text-[#EAE2D2] transition-colors cursor-pointer">
+                고객센터
+              </button>
             </div>
-            <p className="text-xs text-[#A09382] font-sans-kr">
-              대한민국 대표 중고명품 통합 검색 서비스
-            </p>
           </div>
           <div className="text-xs text-[#8C7E6C] font-sans-kr space-y-1">
-            <p>© 2026 Re:Luxe. All rights reserved.</p>
+            <p>© 2026 Reverdi. All rights reserved.</p>
           </div>
         </div>
       </footer>
-
-      {/* 오픈 예정 카테고리 사전 알림 모달 */}
-      <NotifyModal
-        category={notifyCategory}
-        onClose={() => setNotifyCategory(null)}
-      />
     </div>
   );
 }
