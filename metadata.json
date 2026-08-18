@@ -1,0 +1,6 @@
+{
+  "name": "d'occasion",
+  "description": "중고명품 통합검색 사이트",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
