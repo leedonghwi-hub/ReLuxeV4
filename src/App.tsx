@@ -66,6 +66,7 @@ export default function App() {
       <SearchResultsPage
         query={searchQuery}
         initialCategory={selectedCategory || 'all'}
+        initialBrand={selectedBrand || '전체'}
         onGoHome={handleGoHome}
         onSelectCategory={(categoryId, brand, subQuery) => {
           handleOpenSearchPage(subQuery || '', categoryId, brand);

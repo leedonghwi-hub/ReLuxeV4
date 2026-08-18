@@ -31,6 +31,8 @@ interface SearchResultsPageProps {
   query: string;
   /** 초기 선택된 카테고리 ID (기본값 'all') */
   initialCategory?: string;
+  /** 초기 선택된 브랜드명 (기본값 '전체') */
+  initialBrand?: string;
   /** 홈 화면 이동 핸들러 */
   onGoHome: () => void;
   /** 카테고리/브랜드 선택 핸들러 */
@@ -79,6 +81,7 @@ const PRICE_PRESETS = [
 export const SearchResultsPage: React.FC<SearchResultsPageProps> = ({
   query,
   initialCategory = 'all',
+  initialBrand = '전체',
   onGoHome,
   onSelectCategory,
   onSelectProduct,
@@ -88,10 +91,10 @@ export const SearchResultsPage: React.FC<SearchResultsPageProps> = ({
   const [searchInput, setSearchInput] = useState(query);
   // 활성 카테고리
   const [activeCategory, setActiveCategory] = useState<string>(initialCategory || 'all');
-  // 활성 거래 플랫폼 (전체, 중고나라, 번개장터, 당근, 구구스, 필웨이)
+  // 활성 거래 플랫폼 (전체, 중고나라, 당근마켓, 번개장터)
   const [activePlatform, setActivePlatform] = useState<string>('전체');
   // 선택된 브랜드
-  const [selectedBrand, setSelectedBrand] = useState<string>('전체');
+  const [selectedBrand, setSelectedBrand] = useState<string>(initialBrand || '전체');
   // 정렬 기준 (최저가, 최고가, 최신순)
   const [sortBy, setSortBy] = useState<'lowest_price' | 'highest_price' | 'latest'>('lowest_price');
   // 가격 범위 필터 (최저가 / 최고가)
@@ -109,6 +112,13 @@ export const SearchResultsPage: React.FC<SearchResultsPageProps> = ({
       setActiveCategory(initialCategory);
     }
   }, [initialCategory]);
+
+  // initialBrand props 변경 시 브랜드 동기화
+  useEffect(() => {
+    if (initialBrand) {
+      setSelectedBrand(initialBrand);
+    }
+  }, [initialBrand]);
 
   // 반응형 한 행당 아이템 수 계산 (데스크탑 기준 5개)
   const [itemsPerRow, setItemsPerRow] = useState<number>(5);

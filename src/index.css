@@ -84,3 +84,12 @@ input[type="range"].dual-slider::-moz-range-thumb:active {
   background: #FAF5EB;
 }
 
+@keyframes recommendTimer {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
